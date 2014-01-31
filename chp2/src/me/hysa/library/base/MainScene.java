@@ -6,14 +6,7 @@
 
 package me.hysa.library.base;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import org.andengine.entity.scene.Scene;
-import org.andengine.entity.sprite.Sprite;
-import org.andengine.opengl.texture.TextureOptions;
-import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
-import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
-import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.ui.activity.BaseGameActivity;
 
 /**
