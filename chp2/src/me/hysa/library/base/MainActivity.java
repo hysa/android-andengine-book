@@ -5,13 +5,11 @@ import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.scene.Scene;
-import org.andengine.ui.activity.SimpleLayoutGameActivity;
 
 import android.os.Bundle;
-import android.app.Activity;
 import android.view.Menu;
 
-public class MainActivity extends SimpleLayoutGameActivity {
+public class MainActivity extends MultiSceneActivity {
 
     // 画面サイズ
     private int CAMERA_WIDTH = 480;
@@ -32,12 +30,6 @@ public class MainActivity extends SimpleLayoutGameActivity {
                 new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT),
                 camera);
         return eo;
-    }
-
-    @Override
-    protected void onCreateResources() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -70,6 +62,33 @@ public class MainActivity extends SimpleLayoutGameActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    /**
+     * @see me.hysa.library.base.MultiSceneActivity#appendScene(me.hysa.library.base.KeyListenScene)
+     */
+    @Override
+    public void appendScene(KeyListenScene scene) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /**
+     * @see me.hysa.library.base.MultiSceneActivity#backToInitial()
+     */
+    @Override
+    public void backToInitial() {
+        // TODO Auto-generated method stub
+
+    }
+
+    /**
+     * @see me.hysa.library.base.MultiSceneActivity#refreshRUnnningScene(me.hysa.library.base.KeyListenScene)
+     */
+    @Override
+    public void refreshRUnnningScene(KeyListenScene scene) {
+        // TODO Auto-generated method stub
+
     }
 
 }

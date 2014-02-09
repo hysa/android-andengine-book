@@ -9,24 +9,31 @@ package me.hysa.library.base;
 import org.andengine.entity.scene.Scene;
 import org.andengine.ui.activity.BaseGameActivity;
 
+import android.view.KeyEvent;
+
 /**
  * @author hysa
  *
  */
-public class MainScene extends Scene {
+public class MainScene extends KeyListenScene {
 
-    // Sceneを管理するActivityのインスタンスを保持
-    // アプリの場合のContextと同じように利用できる
-    private BaseGameActivity baseActivity;
-    private ResourceUtil resourceUtil;
-
-    public MainScene(BaseGameActivity baseActivity) {
-        this.baseActivity = baseActivity;
+    public MainScene(MultiSceneActivity baseActivity) {
+        super(baseActivity);
         init();
     }
 
     public void init() {
-        resourceUtil = ResourceUtil.getInstance(baseActivity);
-        attachChild(resourceUtil.getSprite("main_bg.png"));
+        attachChild(getBaseActivity().getResourceUtil().getSprite("main_bg.png"));
+    }
+
+    @Override
+    public void prepareSoundAndMusic() {
+
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent e) {
+        return false;
     }
 }
+
