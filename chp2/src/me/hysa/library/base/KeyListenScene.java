@@ -54,7 +54,7 @@ public abstract class KeyListenScene extends Scene {
      * y座標は任意の値。
      */
     public Sprite placeToCenterX(Sprite sp, float y) {
-        sp.setPosition(baseActivity.getEngine().getCamera().getWidth() / 2.0f - sp.getWidth() / 2.0f, y);
+        sp.setPosition(baseActivity.getEngine().getCamera().getHeight() / 2.0f - sp.getHeight() / 2.0f, y);
         return sp;
     }
 
