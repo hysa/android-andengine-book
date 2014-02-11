@@ -41,7 +41,7 @@ public class MainScene extends KeyListenScene {
         // コイン画像の読み込みと座標設定
         mCoin = getBaseActivity().getResourceUtil().getAnimatedSprite("coin_100.png", 1, 3);
         placeToCenterX(mCoin, 600);
-        mCoin.animate(50); // 1コマ50ミリ秒
+//        mCoin.animate(50); // 1コマ50ミリ秒
 
         attachChild(mCoin);
 
