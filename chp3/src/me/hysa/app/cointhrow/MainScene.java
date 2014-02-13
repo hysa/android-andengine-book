@@ -13,7 +13,6 @@ import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.input.touch.TouchEvent;
 
-import android.util.Log;
 import android.view.KeyEvent;
 
 /**
@@ -37,6 +36,12 @@ public class MainScene extends KeyListenScene implements IOnSceneTouchListener {
     private float mFlyXVelocity;
     // コインのy座標移動速度
     private float mInitialCoinSpeed;
+    // コインのy軸進行方向
+    private int mCoinDirection;
+    // コインのy軸進行方向が切替わるy座標
+    private int mCoinUpLimit;
+    // コインが缶に入らなかった時、削除し次のコインをセットするy座標
+    private int mCoinDownLimit;
 
     public MainScene(MultiSceneActivity baseActivity) {
         super(baseActivity);
@@ -46,14 +51,8 @@ public class MainScene extends KeyListenScene implements IOnSceneTouchListener {
     public void init() {
         attachChild(getBaseActivity().getResourceUtil().getSprite("main_bg.png"));
 
-        mTouchStartPoint = new float[2];
-        mIsTouchEnabled = true;
-        mIsDragging = false;
-        mIsCoinFlying = false;
-        // コインのy座標移動の初速を決定
-        mInitialCoinSpeed = 30f;
+        // Sceneのタッチリスナーを登録
         setOnSceneTouchListener(this);
-
         // アップデートハンドラーを登録
         registerUpdateHandler(mUpdateHandler);
 
@@ -69,6 +68,20 @@ public class MainScene extends KeyListenScene implements IOnSceneTouchListener {
         if (mCoin != null) {
             detachChild(mCoin);
         }
+
+        // フラグ初期値をセット
+        mTouchStartPoint = new float[2];
+        mIsTouchEnabled = true;
+        mIsDragging = false;
+        mIsCoinFlying = false;
+        // コインのy座標移動の初速を決定
+        mInitialCoinSpeed = 30f;
+        // コインの初期y軸進行方向
+        mCoinDirection = 1;
+        // コインのy軸進行方向が切り替わるy座標
+        mCoinUpLimit = 80;
+        // コインが缶に入らなかった時、削除し次のコインをセットするy座標
+        mCoinDownLimit = 180;
 
         // コイン画像の読み込みと座標設定
         mCoin = getBaseActivity().getResourceUtil().getAnimatedSprite("coin_100.png", 1, 3);
@@ -163,19 +176,47 @@ public class MainScene extends KeyListenScene implements IOnSceneTouchListener {
         public void onTimePassed(TimerHandler pTimerHandler) {
             // コインが飛んでいるなら実行
             if (mIsCoinFlying) {
-                // コインのy座標移動速度が3以上の時
-                if (mInitialCoinSpeed > 3.0f) {
-                    // 速度を徐々に落とす
-                    mInitialCoinSpeed *= 0.96f;
+
+                // コインが上向きに飛んでいる時
+                if (mCoinDirection == 1) {
+                    // コインのy座標移動速度が3以上の時
+                    if (mInitialCoinSpeed > 3.0f) {
+                        // 速度を徐々に落とす
+                        mInitialCoinSpeed *= 0.96f;
+                    }
+                    // コインを徐々に小さく
+                    mCoin.setScale(mCoin.getScaleX() * 0.97f);
+                    // コインのy座標がリミットに達したら
+                    if (mCoin.getY() < mCoinUpLimit) {
+                        // コインのy軸進行方向を逆向きに
+                        mCoinDirection = -mCoinDirection;
+                    }
+
+                // コインが下向きに飛んでいる時
+                } else {
+                    // y軸移動スピードを徐々に速く
+                    mInitialCoinSpeed *= 1.05f;
+                    // コインのy座標がリミットに達したら
+                    if (mCoin.getY() > mCoinDownLimit) {
+                        // コインの移動をストップ
+                        mIsCoinFlying = false;
+                        // コインのy軸移動方向を初期値に
+                        mCoinDirection = 1;
+                        // コインのアニメーションをストップ
+                        mCoin.stopAnimation();
+                        // 新しいコインをセット
+                        setNewCoin();
+                        return;
+                    }
+
                 }
-                // コインを徐々に小さく
-                mCoin.setScale(mCoin.getScaleX() * 0.97f);
+
                 // x座標の移動
                 mCoin.setX(mCoin.getX() + mFlyXVelocity);
                 // xの移動量を徐々に大きく
                 mFlyXVelocity *= 1.03f;
                 // y座標の移動
-                mCoin.setY(mCoin.getY() - mInitialCoinSpeed);
+                mCoin.setY(mCoin.getY() - mInitialCoinSpeed * mCoinDirection);
             }
         }
     });
